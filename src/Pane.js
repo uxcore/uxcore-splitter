@@ -39,7 +39,7 @@ class Pane extends React.Component {
     orientation: React.PropTypes.oneOf(['vertical', 'horizontal']),
     offset: React.PropTypes.object,
     onTogglePane: React.PropTypes.func,
-    parentSplitter: React.PropTypes.instanceOf(Splitter),
+    parentSplitter: React.PropTypes.object,
   }
 
   constructor(props) {
@@ -158,7 +158,9 @@ class Pane extends React.Component {
     }
     return (
       <div
-        className={cls}
+        className={classnames(cls, {
+          'pane-collapsed': collapsed,
+        })}
         style={paneStyle}
         ref={pane => (this.pane = pane)}
       >

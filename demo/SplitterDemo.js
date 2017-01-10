@@ -49,7 +49,7 @@ class Demo extends React.Component {
         </Splitter>
         <h2>Change layout by logic</h2>
         <Splitter orientation="vertical" className="wrapper">
-          <Pane size={this.state.paneSize} collapsible>
+          <Pane size={this.state.paneSize} collapsible resizable>
             <button onClick={this.handleChangePaneSize}>change my size</button>
           </Pane>
           <Pane>

@@ -29,11 +29,15 @@ class Splitter extends React.Component {
     prefixCls: 'uxcore-splitter',
     orientation: 'horizontal',
     className: '',
+    onResize: (offsets, pane, index) => {
+      console.log(offsets, pane, index);
+    },
   }
   static propTypes = {
     prefixCls: React.PropTypes.string,
     orientation: React.PropTypes.oneOf(['vertical', 'horizontal']),
     className: React.PropTypes.string,
+    onResize: React.PropTypes.func,
   }
 
   constructor(props) {
@@ -50,10 +54,6 @@ class Splitter extends React.Component {
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.autoSizePaneSize = 0;
-  }
-
-  componentWillUnmount() {
-
   }
 
   componentDidMount() {
@@ -209,6 +209,7 @@ class Splitter extends React.Component {
           paneOffset[resizeBarIndex].size -= this.delta;
       }
       resizeBar.stopResizing();
+      this.props.onResize(paneOffset, resizeBar, resizeBarIndex - 1);
       this.setState({
         resizing: false,
         resizeBar: null,

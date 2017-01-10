@@ -41,17 +41,26 @@
     }
 
     > .pane-content {
-      overflow: hidden;
       width: 100%;
       height: 100%;
+      > .@{splitter-prefix} {
+        border: 0 none;
+      }
+    }
+
+    &.pane-collapsed {
+      > .pane-content {
+        overflow: hidden;
+      }  
     }
 
     &-vertical {
       height: 100%;
       &.align-left, &.align-none {
         > .toggle-pane {
-          right: -40px;
+          right: -41px;
           top: -1px;
+          border-left: 0 none;
           &:after {
             content: '\e6c9';
           }
@@ -64,8 +73,9 @@
       }
       &.align-right {
         > .toggle-pane {
-          left: -40px;
+          left: -41px;
           top: -1px;
+          border-right: 0 none;
           &:after {
             content: '\e6c8';
           }
@@ -81,8 +91,9 @@
       width: 100%;
       &.align-left, &.align-none {
         > .toggle-pane {
-          bottom: -40px;
+          bottom: -41px;
           right: 0;
+          border-top: 0 none;
           &:after {
             content: '\e6cb';
           }
@@ -95,8 +106,9 @@
       }
       &.align-right {
         > .toggle-pane {
-          top: -40px;
+          top: -41px;
           right: 0;
+          border-bottom: 0 none;
           &:after {
             content: '\e6ca';
           }
