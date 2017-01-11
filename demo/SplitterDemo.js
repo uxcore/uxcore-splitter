@@ -14,7 +14,7 @@ class Demo extends React.Component {
     super(props);
     this.state = {
       paneSize: 200,
-      collapsed: false,
+      collapsed: true,
     };
     this.handleChangePaneSize = this.handleChangePaneSize.bind(this);
     this.handleTogglePane = this.handleTogglePane.bind(this);
@@ -57,7 +57,7 @@ class Demo extends React.Component {
         </Splitter>
         <h2>Change layout by logic</h2>
         <Splitter orientation="vertical" className="wrapper">
-          <Pane size={this.state.paneSize} collapsible resizable collapsed={this.state.collapsed}>
+          <Pane onCollapse={c => (console.log(c))} size={this.state.paneSize} collapsible resizable collapsed={this.state.collapsed}>
             <button onClick={this.handleChangePaneSize}>change my size</button>
             <button onClick={this.handleTogglePane}>collapse my size</button>
           </Pane>

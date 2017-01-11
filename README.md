@@ -87,4 +87,5 @@ Yes please! See the [CONTRIBUTING](https://github.com/uxcore/uxcore/blob/master/
 |resizable|boolean|false|false|whether the pane can be resize by drag|
 |collapsible|boolean|false|false|whether the pane can be collapsed|
 |collapsed|boolean|false|false|collapsed the pane by props|
+|onCollapse|func|false|(collapsed) => {}|trigger when collapsed changed|
 

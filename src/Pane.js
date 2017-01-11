@@ -21,9 +21,11 @@ class Pane extends React.Component {
     collapsible: false,
     orientation: 'horizontal',
     offset: null,
-    onTogglePane: () => {},
     parentSplitter: null,
     collapsed: false,
+    defaultCollapsed: false,
+    onTogglePane: () => {},
+    onCollapse: () => {},
   }
   static propTypes = {
     className: React.PropTypes.string,
@@ -39,9 +41,11 @@ class Pane extends React.Component {
     collapsible: React.PropTypes.bool,
     orientation: React.PropTypes.oneOf(['vertical', 'horizontal']),
     offset: React.PropTypes.object,
-    onTogglePane: React.PropTypes.func,
     parentSplitter: React.PropTypes.object,
     collapsed: React.PropTypes.bool,
+    defaultCollapsed: React.PropTypes.bool,
+    onTogglePane: React.PropTypes.func,
+    onCollapse: React.PropTypes.func,
   }
 
   constructor(props) {
@@ -49,10 +53,10 @@ class Pane extends React.Component {
     this.state = {
       size: props.size || props.defaultSize,
       paneStyle: {},
-      collapsed: props.collapsed,
+      collapsed: props.collapsed || props.defaultCollapsed,
       __size: null,
     };
-    this.handleToggle = this.handleToggle.bind(this);
+    this.handleCollapse = this.handleCollapse.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -73,7 +77,7 @@ class Pane extends React.Component {
     }
   }
 
-  handleToggle() {
+  handleCollapse() {
     this.updateByCollapse();
   }
 
@@ -84,7 +88,7 @@ class Pane extends React.Component {
     };
     if (collapsed) {
       assign(state, {
-        size: __size,
+        size: __size || this.props.size,
         __size: 0  
       });
     } else {
@@ -94,6 +98,7 @@ class Pane extends React.Component {
     }
     this.setState(state, () => {
       this.props.onTogglePane();
+      this.props.onCollapse(!collapsed);
     });
   }
 
@@ -176,7 +181,7 @@ class Pane extends React.Component {
               className={classnames('toggle-pane', {
                 'toggle-pane-collapsed': collapsed,
               })}
-              onClick={this.handleToggle}
+              onClick={this.handleCollapse}
             ></div> : null 
         }
         { this.renderContent() }

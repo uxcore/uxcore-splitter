@@ -13,3 +13,8 @@
 ## 0.1.2
 
 * `FEAT`: add `collapsed` props.
+
+## 0.1.3
+
+* `FEAT`: add `defaultCollapsed` props.
+* `FEAT`: add `onCollapse` props.
