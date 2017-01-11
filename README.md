@@ -77,6 +77,7 @@ Yes please! See the [CONTRIBUTING](https://github.com/uxcore/uxcore/blob/master/
 |prefixCls|string|true|`uxcore-splitter`|className's prefix|
 |className|string|false|''|custom class name|
 |orientation|string|false|`horizontal`|layout type: `vertical` or `horizontal`|
+|onResize|func|false|function({offsets, pane, index})|Triggered when the pane is resized.|
 
 ### Pane
 
@@ -85,4 +86,5 @@ Yes please! See the [CONTRIBUTING](https://github.com/uxcore/uxcore/blob/master/
 |defaultSize|number or `auto`|false|'auto'|the pane's default size|
 |resizable|boolean|false|false|whether the pane can be resize by drag|
 |collapsible|boolean|false|false|whether the pane can be collapsed|
+|collapsed|boolean|false|false|collapsed the pane by props|
 

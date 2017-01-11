@@ -14,13 +14,21 @@ class Demo extends React.Component {
     super(props);
     this.state = {
       paneSize: 200,
+      collapsed: false,
     };
     this.handleChangePaneSize = this.handleChangePaneSize.bind(this);
+    this.handleTogglePane = this.handleTogglePane.bind(this);
   }
 
   handleChangePaneSize() {
     this.setState({
       paneSize: Math.ceil(Math.random() * (300 - 50) + 50, 10),
+    });
+  }
+
+  handleTogglePane() {
+    this.setState({
+      collapsed: !this.state.collapsed,
     });
   }
 
@@ -49,8 +57,9 @@ class Demo extends React.Component {
         </Splitter>
         <h2>Change layout by logic</h2>
         <Splitter orientation="vertical" className="wrapper">
-          <Pane size={this.state.paneSize} collapsible resizable>
+          <Pane size={this.state.paneSize} collapsible resizable collapsed={this.state.collapsed}>
             <button onClick={this.handleChangePaneSize}>change my size</button>
+            <button onClick={this.handleTogglePane}>collapse my size</button>
           </Pane>
           <Pane>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam a orci ac diam pharetra viverra sit amet eget arcu. Ut sit amet efficitur elit. Suspendisse pulvinar pulvinar lectus ac malesuada. Curabitur ac dictum elit. Nam lectus ex, suscipit nec aliquet vel, molestie sed justo. Nullam commodo dui viverra sem hendrerit, eget iaculis nisi commodo. Aliquam at mauris porta libero mattis convallis et posuere leo. Vivamus vehicula libero lacus, ac molestie mi varius eu. Nam vel libero odio. Nulla sollicitudin dignissim pellentesque. Praesent eleifend tortor ac dapibus efficitur. Nunc eleifend augue vel laoreet rutrum.

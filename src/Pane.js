@@ -23,6 +23,7 @@ class Pane extends React.Component {
     offset: null,
     onTogglePane: () => {},
     parentSplitter: null,
+    collapsed: false,
   }
   static propTypes = {
     className: React.PropTypes.string,
@@ -40,6 +41,7 @@ class Pane extends React.Component {
     offset: React.PropTypes.object,
     onTogglePane: React.PropTypes.func,
     parentSplitter: React.PropTypes.object,
+    collapsed: React.PropTypes.bool,
   }
 
   constructor(props) {
@@ -47,7 +49,7 @@ class Pane extends React.Component {
     this.state = {
       size: props.size || props.defaultSize,
       paneStyle: {},
-      collapsed: false,
+      collapsed: props.collapsed,
       __size: null,
     };
     this.handleToggle = this.handleToggle.bind(this);
@@ -55,12 +57,12 @@ class Pane extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.size === this.props.size) {
-      if (nextProps.offset && nextProps.offset.align) {
-        this.getPaneStyleByProps(nextProps);
+      if (nextProps.collapsed !== this.props.collapsed) {
+        this.updateByCollapse();
       } else {
-        this.setState({
-          size: nextProps.size,
-        });
+        if (nextProps.offset && nextProps.offset.align) {
+          this.getPaneStyleByProps(nextProps);
+        }
       }
     } else {
       this.setState({
@@ -72,6 +74,10 @@ class Pane extends React.Component {
   }
 
   handleToggle() {
+    this.updateByCollapse();
+  }
+
+  updateByCollapse() {
     const { collapsed, size, __size } = this.state;
     const state = {
       collapsed: !collapsed,
@@ -183,7 +189,13 @@ class Pane extends React.Component {
     if (typeof children === 'string') {
       return <div className="pane-content">{children}</div>;
     } else {
-      return <div className="pane-content">{React.cloneElement(children, Comp => React.cloneElement(Comp))}</div>;
+      return (
+        <div className="pane-content">
+          {
+            React.Children.map(children, Comp => React.cloneElement(Comp))
+          }
+        </div>
+      );
     }
   }
 }
