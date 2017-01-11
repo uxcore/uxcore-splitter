@@ -57,9 +57,17 @@ class Demo extends React.Component {
         </Splitter>
         <h2>Change layout by logic</h2>
         <Splitter orientation="vertical" className="wrapper">
-          <Pane onCollapse={c => (console.log(c))} size={this.state.paneSize} collapsible resizable collapsed={this.state.collapsed}>
+          <Pane
+            onCollapse={c => (this.setState({
+              collapsed: c,
+            }))}
+            size={this.state.paneSize}
+            collapsible
+            resizable
+            collapse={this.state.collapsed ? 'collapsed' : 'uncollapsed'}
+          >
             <button onClick={this.handleChangePaneSize}>change my size</button>
-            <button onClick={this.handleTogglePane}>collapse my size</button>
+            <button onClick={this.handleTogglePane}>collapse me</button>
           </Pane>
           <Pane>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam a orci ac diam pharetra viverra sit amet eget arcu. Ut sit amet efficitur elit. Suspendisse pulvinar pulvinar lectus ac malesuada. Curabitur ac dictum elit. Nam lectus ex, suscipit nec aliquet vel, molestie sed justo. Nullam commodo dui viverra sem hendrerit, eget iaculis nisi commodo. Aliquam at mauris porta libero mattis convallis et posuere leo. Vivamus vehicula libero lacus, ac molestie mi varius eu. Nam vel libero odio. Nulla sollicitudin dignissim pellentesque. Praesent eleifend tortor ac dapibus efficitur. Nunc eleifend augue vel laoreet rutrum.

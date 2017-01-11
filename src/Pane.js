@@ -22,8 +22,8 @@ class Pane extends React.Component {
     orientation: 'horizontal',
     offset: null,
     parentSplitter: null,
-    collapsed: false,
-    defaultCollapsed: false,
+    collapse: null,
+    defaultCollapse: null,
     onTogglePane: () => {},
     onCollapse: () => {},
   }
@@ -42,8 +42,8 @@ class Pane extends React.Component {
     orientation: React.PropTypes.oneOf(['vertical', 'horizontal']),
     offset: React.PropTypes.object,
     parentSplitter: React.PropTypes.object,
-    collapsed: React.PropTypes.bool,
-    defaultCollapsed: React.PropTypes.bool,
+    collapse: React.PropTypes.oneOf(['collapsed', 'uncollapsed']),
+    defaultCollapse: React.PropTypes.oneOf(['collapsed', 'uncollapsed']),
     onTogglePane: React.PropTypes.func,
     onCollapse: React.PropTypes.func,
   }
@@ -53,7 +53,7 @@ class Pane extends React.Component {
     this.state = {
       size: props.size || props.defaultSize,
       paneStyle: {},
-      collapsed: props.collapsed || props.defaultCollapsed,
+      collapsed: props.collapse === 'collapsed' || props.defaultCollapse === 'collapsed',
       __size: null,
     };
     this.handleCollapse = this.handleCollapse.bind(this);
@@ -61,7 +61,7 @@ class Pane extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.size === this.props.size) {
-      if (nextProps.collapsed !== this.props.collapsed) {
+      if (nextProps.collapse !== this.props.collapse) {
         this.updateByCollapse();
       } else {
         if (nextProps.offset && nextProps.offset.align) {
@@ -78,7 +78,12 @@ class Pane extends React.Component {
   }
 
   handleCollapse() {
-    this.updateByCollapse();
+    const { collapse } = this.props;
+    const { collapsed } = this.state;
+    if (!collapse) {
+      this.updateByCollapse();
+    }
+    this.props.onCollapse(!collapsed);
   }
 
   updateByCollapse() {
@@ -88,7 +93,7 @@ class Pane extends React.Component {
     };
     if (collapsed) {
       assign(state, {
-        size: __size || this.props.size,
+        size: __size || this.props.size || this.props.defaultSize,
         __size: 0  
       });
     } else {
@@ -98,7 +103,6 @@ class Pane extends React.Component {
     }
     this.setState(state, () => {
       this.props.onTogglePane();
-      this.props.onCollapse(!collapsed);
     });
   }
 
