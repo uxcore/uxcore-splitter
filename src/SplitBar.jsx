@@ -8,13 +8,27 @@
 import React from 'react';
 import classnames from 'classnames';
 import assign from 'object-assign';
+import PropTypes from 'prop-types';
 
 const NonObjectProps = ['className', 'disable', 'hide', 'orientation', 'resizable'];
 const OffsetProps = ['prevPaneOffset', 'nextPaneOffset'];
 
 class SplitBar extends React.Component {
+  static displayName = 'SplitBar';
 
-  static displayName = 'SplitBar'; // eslint-disable-line
+  static propTypes = {
+    className: PropTypes.string,
+    resizable: PropTypes.bool,
+    orientation: PropTypes.oneOf(['vertical', 'horizontal']),
+    prevPaneOffset: PropTypes.object,
+    nextPaneOffset: PropTypes.object,
+    onResizeActive: PropTypes.func,
+    disable: PropTypes.bool,
+    hide: PropTypes.bool,
+  }
+
+
+ // eslint-disable-line
   static defaultProps = {
     className: '',
     resizable: false,
@@ -25,16 +39,7 @@ class SplitBar extends React.Component {
     disable: false,
     hide: false,
   }
-  static propTypes = {
-    className: React.PropTypes.string,
-    resizable: React.PropTypes.bool,
-    orientation: React.PropTypes.oneOf(['vertical', 'horizontal']),
-    prevPaneOffset: React.PropTypes.object,
-    nextPaneOffset: React.PropTypes.object,
-    onResizeActive: React.PropTypes.func,
-    disable: React.PropTypes.bool,
-    hide: React.PropTypes.bool,
-  }
+
 
   constructor(props) {
     super(props);
@@ -52,14 +57,12 @@ class SplitBar extends React.Component {
     if (NonObjectProps.some(propName => nextProps[propName] !== this.props[propName])) {
       return true;
     }
-    if (OffsetProps.some(name => {
-      return !(
-        nextProps[name].align === this.props[name].align 
+    if (OffsetProps.some(name => !(
+      nextProps[name].align === this.props[name].align
         && nextProps[name].start === this.props[name].start
         && nextProps[name].end === this.props[name].end
         && nextProps[name].size === this.props[name].size
-      );
-    })) {
+    ))) {
       return true;
     }
     return false;
@@ -87,9 +90,11 @@ class SplitBar extends React.Component {
       ghostPosition: pos,
     });
   }
-  
+
   render() {
-    const { className, orientation, prevPaneOffset, nextPaneOffset, disable, hide } = this.props;
+    const {
+      className, orientation, prevPaneOffset, nextPaneOffset, disable, hide,
+    } = this.props;
     const { resizing, ghostPosition } = this.state;
     const barStyle = {};
     const ghostBarStyle = {};
@@ -111,7 +116,7 @@ class SplitBar extends React.Component {
         if (resizing && ghostPosition) {
           assign(ghostBarStyle, {
             left: ghostPosition,
-          }); 
+          });
         }
         break;
       case 'horizontal':
@@ -132,7 +137,7 @@ class SplitBar extends React.Component {
         if (resizing && ghostPosition) {
           assign(ghostBarStyle, {
             top: ghostPosition,
-          }); 
+          });
         }
         break;
     }
@@ -142,7 +147,7 @@ class SplitBar extends React.Component {
         'resize-bar': !disable,
       }),
       style: barStyle,
-    }
+    };
     if (!disable) {
       assign(barProps, {
         onMouseDown: this.handleSplitMouseDown,
@@ -150,16 +155,14 @@ class SplitBar extends React.Component {
     }
     return (
       <div {...barProps}>
-        { 
-          resizing ? 
-            <div className="ghost-split-bar" style={ghostBarStyle}></div>
-            : 
-            null
+        {
+          resizing
+            ? <div className="ghost-split-bar" style={ghostBarStyle} />
+            : null
         }
       </div>
     );
   }
-
 }
 
 export default SplitBar;

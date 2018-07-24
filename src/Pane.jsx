@@ -8,11 +8,13 @@
 import React from 'react';
 import classnames from 'classnames';
 import assign from 'object-assign';
+import PropTypes from 'prop-types';
 import Splitter from './SplitBar';
 
 class Pane extends React.Component {
+  static displayName = 'Pane';
 
-  static displayName = 'Pane'; // eslint-disable-line
+  // eslint-disable-line
   static defaultProps = {
     className: '',
     defaultSize: 'auto',
@@ -24,28 +26,29 @@ class Pane extends React.Component {
     parentSplitter: null,
     collapse: null,
     defaultCollapse: null,
-    onTogglePane: () => {},
-    onCollapse: () => {},
+    onTogglePane: () => { },
+    onCollapse: () => { },
   }
+
   static propTypes = {
-    className: React.PropTypes.string,
-    defaultSize: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.number,
+    className: PropTypes.string,
+    defaultSize: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
     ]),
-    size: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.number,
+    size: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
     ]),
-    resizable: React.PropTypes.bool,
-    collapsible: React.PropTypes.bool,
-    orientation: React.PropTypes.oneOf(['vertical', 'horizontal']),
-    offset: React.PropTypes.object,
-    parentSplitter: React.PropTypes.object,
-    collapse: React.PropTypes.oneOf(['collapsed', 'uncollapsed']),
-    defaultCollapse: React.PropTypes.oneOf(['collapsed', 'uncollapsed']),
-    onTogglePane: React.PropTypes.func,
-    onCollapse: React.PropTypes.func,
+    resizable: PropTypes.bool,
+    collapsible: PropTypes.bool,
+    orientation: PropTypes.oneOf(['vertical', 'horizontal']),
+    offset: PropTypes.object,
+    parentSplitter: PropTypes.object,
+    collapse: PropTypes.oneOf(['collapsed', 'uncollapsed']),
+    defaultCollapse: PropTypes.oneOf(['collapsed', 'uncollapsed']),
+    onTogglePane: PropTypes.func,
+    onCollapse: PropTypes.func,
   }
 
   constructor(props) {
@@ -63,10 +66,8 @@ class Pane extends React.Component {
     if (nextProps.size === this.props.size) {
       if (nextProps.collapse !== this.props.collapse) {
         this.updateByCollapse();
-      } else {
-        if (nextProps.offset && nextProps.offset.align) {
-          this.getPaneStyleByProps(nextProps);
-        }
+      } else if (nextProps.offset && nextProps.offset.align) {
+        this.getPaneStyleByProps(nextProps);
       }
     } else {
       this.setState({
@@ -94,12 +95,12 @@ class Pane extends React.Component {
     if (collapsed) {
       assign(state, {
         size: __size || this.props.size || this.props.defaultSize,
-        __size: 0  
+        __size: 0,
       });
     } else {
       assign(state, {
         __size: size,
-      });  
+      });
     }
     this.setState(state, () => {
       this.props.onTogglePane();
@@ -109,7 +110,7 @@ class Pane extends React.Component {
   getPaneStyleByProps(props) {
     const paneStyle = {};
     const { offset, orientation } = props;
-    const size = offset.align !== 'none' ? offset.size: 'auto';
+    const size = offset.align !== 'none' ? offset.size : 'auto';
     switch (orientation) {
       case 'vertical':
         if (offset.align === 'left') {
@@ -161,13 +162,15 @@ class Pane extends React.Component {
   }
 
   render() {
-    const { className, orientation, offset, collapsible } = this.props;
+    const {
+      className, orientation, offset, collapsible,
+    } = this.props;
     const { paneStyle, collapsed } = this.state;
     let cls;
     if (offset) {
       cls = classnames(className, {
         [`align-${offset.align}`]: offset,
-      })
+      });
     } else {
       cls = className;
     }
@@ -180,15 +183,17 @@ class Pane extends React.Component {
         ref={pane => (this.pane = pane)}
       >
         {
-          collapsible ? 
-            <div
-              className={classnames('toggle-pane', {
-                'toggle-pane-collapsed': collapsed,
-              })}
-              onClick={this.handleCollapse}
-            ></div> : null 
+          collapsible
+            ? (
+              <div
+                className={classnames('toggle-pane', {
+                  'toggle-pane-collapsed': collapsed,
+                })}
+                onClick={this.handleCollapse}
+              />
+            ) : null
         }
-        { this.renderContent() }
+        {this.renderContent()}
       </div>
     );
   }
@@ -196,16 +201,19 @@ class Pane extends React.Component {
   renderContent() {
     const { children } = this.props;
     if (typeof children === 'string') {
-      return <div className="pane-content">{children}</div>;
-    } else {
       return (
         <div className="pane-content">
-          {
-            React.Children.map(children, Comp => React.cloneElement(Comp))
-          }
+          {children}
         </div>
       );
     }
+    return (
+      <div className="pane-content">
+        {
+          React.Children.map(children, Comp => React.cloneElement(Comp))
+        }
+      </div>
+    );
   }
 }
 

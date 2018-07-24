@@ -7,8 +7,9 @@
  */
 import React from 'react';
 import classnames from 'classnames';
-import SplitBar from './SplitBar';
 import assign from 'object-assign';
+import PropTypes from 'prop-types';
+import SplitBar from './SplitBar';
 
 function clearSelection() {
   if (window.getSelection) {
@@ -23,8 +24,16 @@ function clearSelection() {
 }
 
 class Splitter extends React.Component {
+  static displayName = 'Splitter';
 
-  static displayName = 'Splitter'; // eslint-disable-line
+  static propTypes = {
+    prefixCls: PropTypes.string,
+    orientation: PropTypes.oneOf(['vertical', 'horizontal']),
+    className: PropTypes.string,
+    onResize: PropTypes.func,
+  }
+
+ // eslint-disable-line
   static defaultProps = {
     prefixCls: 'uxcore-splitter',
     orientation: 'horizontal',
@@ -33,12 +42,7 @@ class Splitter extends React.Component {
       console.log(offsets, pane, index);
     },
   }
-  static propTypes = {
-    prefixCls: React.PropTypes.string,
-    orientation: React.PropTypes.oneOf(['vertical', 'horizontal']),
-    className: React.PropTypes.string,
-    onResize: React.PropTypes.func,
-  }
+
 
   constructor(props) {
     super(props);
@@ -62,25 +66,24 @@ class Splitter extends React.Component {
 
   calculatePaneOffset() {
     let paneOffset = [];
-    let offset, prevOffset;
+    let offset; let
+      prevOffset;
     const sizeAry = this.paneList
       .map((pane, i) => this.paneList[i].getCurrentSize())
-      .map(size => size === 'collapsed' ? 0 : size);
+      .map(size => (size === 'collapsed' ? 0 : size));
     let autoSizePaneIndex = false;
     let leftAlignPaneAry = [];
     let rightAlignPaneAry = [];
     sizeAry.forEach((size, i) => {
       if (typeof size !== 'number') {
         if (autoSizePaneIndex !== false) {
-          console.warn('uxcore-splitter: the splitter has more than one pane which is auto sized.')
+          console.warn('uxcore-splitter: the splitter has more than one pane which is auto sized.');
         }
         autoSizePaneIndex = i;
+      } else if (autoSizePaneIndex !== false) {
+        rightAlignPaneAry.push(size);
       } else {
-        if (autoSizePaneIndex !== false) {
-          rightAlignPaneAry.push(size);
-        } else {
-          leftAlignPaneAry.push(size);
-        }
+        leftAlignPaneAry.push(size);
       }
     });
     leftAlignPaneAry = leftAlignPaneAry.reduce((prev, size, index) => {
@@ -123,10 +126,10 @@ class Splitter extends React.Component {
         align: 'none',
       };
       if (leftAlignPaneAry.length > 0) {
-        middlePane.start = leftAlignPaneAry[leftAlignPaneAry.length - 1].start + leftAlignPaneAry[leftAlignPaneAry.length - 1].size; 
+        middlePane.start = leftAlignPaneAry[leftAlignPaneAry.length - 1].start + leftAlignPaneAry[leftAlignPaneAry.length - 1].size;
       }
       if (rightAlignPaneAry.length > 0) {
-        middlePane.end = rightAlignPaneAry[0].end + rightAlignPaneAry[0].size; 
+        middlePane.end = rightAlignPaneAry[0].end + rightAlignPaneAry[0].size;
       }
       paneOffset.push(middlePane);
     }
@@ -154,7 +157,8 @@ class Splitter extends React.Component {
   handleMouseMove(e) {
     const { orientation } = this.props;
     const { resizeBar, resizeBarIndex, paneOffset } = this.state;
-    let nextPaneSize, prevPaneSize;
+    let nextPaneSize; let
+      prevPaneSize;
     if (resizeBar) {
       let delta;
       switch (orientation) {
@@ -174,13 +178,11 @@ class Splitter extends React.Component {
         } else {
           delta = delta > this.autoSizePaneSize ? this.autoSizePaneSize : delta;
         }
+      } else if (paneOffset[resizeBarIndex - 1].align !== 'none') {
+        prevPaneSize = paneOffset[resizeBarIndex - 1].size;
+        delta = Math.abs(delta) > prevPaneSize ? -prevPaneSize : delta;
       } else {
-        if (paneOffset[resizeBarIndex - 1].align !== 'none') {
-          prevPaneSize = paneOffset[resizeBarIndex - 1].size;
-          delta = Math.abs(delta) > prevPaneSize ? - prevPaneSize : delta;
-        } else {
-          delta = Math.abs(delta) > this.autoSizePaneSize ? - this.autoSizePaneSize : delta;
-        }
+        delta = Math.abs(delta) > this.autoSizePaneSize ? -this.autoSizePaneSize : delta;
       }
       // console.log('handleMouseMove', delta, paneOffset[resizeBarIndex - 1], paneOffset[resizeBarIndex]);
       resizeBar.move(delta);
@@ -191,7 +193,7 @@ class Splitter extends React.Component {
 
   handleMouseUp() {
     const { resizeBar, resizeBarIndex } = this.state;
-    let { paneOffset } = this.state;
+    const { paneOffset } = this.state;
     if (resizeBar) {
       if (paneOffset[resizeBarIndex - 1].align !== 'none') {
         paneOffset[resizeBarIndex - 1].size += this.delta;
@@ -206,7 +208,7 @@ class Splitter extends React.Component {
         }
       } else {
         paneOffset[resizeBarIndex - 1].end -= this.delta;
-          paneOffset[resizeBarIndex].size -= this.delta;
+        paneOffset[resizeBarIndex].size -= this.delta;
       }
       resizeBar.stopResizing();
       this.props.onResize(paneOffset, resizeBar, resizeBarIndex - 1);
@@ -242,7 +244,8 @@ class Splitter extends React.Component {
     const { prefixCls, children, orientation } = this.props;
     const { paneOffset } = this.state;
     const panes = [];
-    let paneProps, prevPaneSize, curPaneSize, disable, hide;
+    let paneProps; let prevPaneSize; let curPaneSize; let disable; let
+      hide;
     const paneSizes = this.paneList.map(pane => pane.getCurrentSize());
     React.Children.forEach(children, (Comp, i) => {
       if (i !== 0) {
@@ -276,7 +279,7 @@ class Splitter extends React.Component {
               }}
               disable={disable}
               hide={hide}
-            />
+            />,
           );
         }
       }
